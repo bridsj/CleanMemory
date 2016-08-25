@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification_cleaner_header_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/notification_cleaner_header_sky_blue_height"
+    android:background="@drawable/notification_cleaner_header_bg">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="95dp"
+        android:layout_marginLeft="94dp"
+        android:rotation="8"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:src="@drawable/guide_notificationcleaner_header_icon_bird"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="98dp"
+        android:layout_marginLeft="122dp"
+        android:rotation="15"
+        android:src="@drawable/guide_notificationcleaner_header_icon_bird"/>
+
+    <ImageView
+        android:id="@+id/notification_cleaner_header_mountain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/guide_notificationcleaner_header_icon_hill"/>
+</RelativeLayout>

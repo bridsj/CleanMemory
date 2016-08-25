@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="clean_memory_button_pressed">#E080DEFF</color>
+    <color name="transp">#00000000</color>
+    <color name="clean_memory_text_color_normal">#ffffff00</color>
+    <color name="divider_color">#80ffff00</color>
+</resources>

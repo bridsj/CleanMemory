@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.cleanmaster.notificationclean.view.CMCircularProgressBar
+        android:id="@+id/circular_progress_bar"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerInParent="true"
+        app:cm_circular_pb_background_color="#00000000"
+        app:cm_circular_pb_clockwise_enable="false"
+        app:cm_circular_pb_marker_progress="0.0"
+        app:cm_circular_pb_marker_visible="false"
+        app:cm_circular_pb_progress="1.0"
+        app:cm_circular_pb_progress_color="#FFFFFF"
+        app:cm_circular_pb_stroke_width="2.5dp"
+        app:cm_circular_pb_thumb_visible="false"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginLeft="80dp"
+        android:src="@drawable/notification_management_clean_result_icon_circle"/>
+
+    <ImageView
+        android:id="@+id/circular_center_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/notification_management_clean_result_icon_check"/>
+</RelativeLayout>

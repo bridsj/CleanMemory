@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CMCircularProgressBar">
+        <attr name="cm_circular_pb_stroke_width" format="dimension" />
+        <attr name="cm_circular_pb_progress" format="float" />
+        <attr name="cm_circular_pb_marker_progress" format="float" />
+        <attr name="cm_circular_pb_progress_color" format="color" />
+        <attr name="cm_circular_pb_background_color" format="color" />
+        <attr name="cm_circular_pb_thumb_visible" format="boolean" />
+        <attr name="cm_circular_pb_marker_visible" format="boolean" />
+        <attr name="cm_circular_pb_clockwise_enable" format="boolean"/>
+        <attr name="android:gravity" />
+    </declare-styleable>
+
+    <attr name="CMCircularProgressBarStyle" format="reference" />
+
+</resources>

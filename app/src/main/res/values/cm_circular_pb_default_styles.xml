@@ -1,0 +1,24 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <style name="CircularProgressBar">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="cm_circular_pb_stroke_width">5dp</item>
+        <item name="cm_circular_pb_progress" format="float">0.1</item>
+        <item name="cm_circular_pb_progress_color">#ffff4444</item>
+        <item name="cm_circular_pb_background_color">#ffffffff</item>
+        <item name="cm_circular_pb_marker_visible">true</item>
+        <item name="cm_circular_pb_thumb_visible">true</item>
+    </style>
+    
+    <style name="CircularProgressBarLight">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="cm_circular_pb_stroke_width">5dp</item>
+        <item name="cm_circular_pb_progress" format="float">0.1</item>
+        <item name="cm_circular_pb_progress_color">#ffff4444</item>
+        <item name="cm_circular_pb_background_color">#aaa</item>
+        <item name="cm_circular_pb_marker_visible">true</item>
+        <item name="cm_circular_pb_thumb_visible">true</item>
+    </style>
+</resources>
