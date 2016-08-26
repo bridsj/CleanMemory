@@ -2,6 +2,8 @@ package com.cleanmaster.notificationclean.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -38,11 +40,36 @@ public class Main3Activity extends FragmentActivity {
                 if (reverseSortedPositions == null) {
                     return;
                 }
+                if (isFinishing()) {
+                    return;
+                }
                 for (int position : reverseSortedPositions) {
                     mAdapter.removeItem(position);
                 }
+                if (!isManual) {
+                    mSwipeListView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSwipeListView.performSwipeItem();
+                        }
+                    });
+                }
             }
         });
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeListView.startShakeAnimators();
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeListView.clearShakeAnimations();
+                        mSwipeListView.performSwipeItem();
+                    }
+                }, 3000);
+            }
+        }, 2000);
     }
 
     private static class NotificationCleanerAdapter extends AbsAdapter {
@@ -108,6 +135,14 @@ public class Main3Activity extends FragmentActivity {
             protected void bindView(View itemView) {
                 mTextView = (TextView) itemView.findViewById(R.id.text);
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSwipeListView != null) {
+            mSwipeListView.clearShakeAnimations();
         }
     }
 }

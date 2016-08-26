@@ -22,9 +22,14 @@ package com.cleanmaster.notificationclean.view.swipe;
 
 import android.graphics.Rect;
 import android.os.Handler;
-import android.view.*;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -317,6 +322,14 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         }
     }
 
+    public void performSwipeItem(final View view, final boolean isManual, final boolean swap, final boolean swapRight, final int position) {
+        swipeCurrentAction = SwipeListView.SWIPE_ACTION_DISMISS;
+        if (viewWidth < 2) {
+            viewWidth = swipeListView.getWidth();
+        }
+        generateDismissAnimate(view, isManual, swap, swapRight, position);
+    }
+
     /**
      * Create dismiss animation
      * @param view affected view
@@ -325,6 +338,9 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
      * @param position Position of list
      */
     private void generateDismissAnimate(final View view, final boolean isManual, final boolean swap, final boolean swapRight, final int position) {
+        if (null == view) {
+            return ;
+        }
         int moveTo = 0;
         if (opened.get(position)) {
             if (!swap) {
@@ -341,7 +357,6 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
             ++dismissAnimationRefCount;
             alpha = 0;
         }
-
         animate(view)
                 .translationX(moveTo)
                 .alpha(alpha)
@@ -409,10 +424,13 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
      * Return ScrollListener for ListView
      * @return OnScrollListener
      */
-    public AbsListView.OnScrollListener makeScrollListener() {
+    public AbsListView.OnScrollListener makeScrollListener(final AbsListView.OnScrollListener onScrollListener) {
         return new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                if (onScrollListener != null) {
+                    onScrollListener.onScrollStateChanged(absListView, scrollState);
+                }
                 setEnabled(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
                 if (swipeClosesAllItemsWhenListMoves && scrollState == SCROLL_STATE_TOUCH_SCROLL) {
                     closeOpenedItems();
@@ -430,10 +448,14 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                         }
                     }, 500);
                 }
+
             }
 
             @Override
             public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                if (onScrollListener != null) {
+                    onScrollListener.onScroll(absListView, i, i1, i2);
+                }
             }
         };
     }
@@ -662,7 +684,6 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         final int originalHeight = dismissView.getHeight();
 
         ValueAnimator animator = ValueAnimator.ofInt(originalHeight, 1).setDuration(animationTime);
-
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

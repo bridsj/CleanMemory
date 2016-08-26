@@ -18,18 +18,25 @@
 
 package com.cleanmaster.notificationclean.view.swipe;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.really.cleanmemory.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ListView subclass that provides the swipe functionality
@@ -107,6 +114,10 @@ public class SwipeListView extends ListView {
      */
     private SwipeListViewTouchListener touchListener;
 
+    private OnScrollListener mOnScrollListener;
+
+    private List<AnimatorSet> mShakeAnimations = new ArrayList<>();
+
     /**
      * @see ListView#ListView(Context)
      */
@@ -182,9 +193,10 @@ public class SwipeListView extends ListView {
         touchListener.setSwipeClosesAllItemsWhenListMoves(swipeCloseAllItemsWhenMoveList);
         touchListener.setSwipeOpenOnLongPress(swipeOpenOnLongPress);
         setOnTouchListener(touchListener);
-        setOnScrollListener(touchListener.makeScrollListener());
+        setOnScrollListener(touchListener.makeScrollListener(mOnScrollListener));
     }
 
+    private DataSetObserver mDataSetObserver;
     /**
      * @see ListView#setAdapter(ListAdapter)
      */
@@ -192,14 +204,15 @@ public class SwipeListView extends ListView {
     public void setAdapter(ListAdapter adapter) {
         super.setAdapter(adapter);
         touchListener.resetItems();
-        adapter.registerDataSetObserver(new DataSetObserver() {
+        mDataSetObserver = new DataSetObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
                 onListChanged();
                 touchListener.resetItems();
             }
-        });
+        };
+        adapter.registerDataSetObserver(mDataSetObserver);
     }
 
     /**
@@ -295,6 +308,24 @@ public class SwipeListView extends ListView {
     protected void onMove(int position, float x) {
         if (swipeListViewListener != null) {
             swipeListViewListener.onMove(position, x);
+        }
+    }
+
+    public void performSwipeItem() {
+        int childCount = getChildCount();
+        int headerCount = getHeaderViewsCount();
+        if (childCount == headerCount) {
+            return;
+        }
+        for (int i = headerCount; i < childCount; i++) {
+            int firstVisiblePosition = getFirstVisiblePosition();
+            View childView = getChildAt(i + firstVisiblePosition);
+            if(null != childView){
+                if (touchListener != null) {
+                    touchListener.performSwipeItem(childView, false, true, true, i);
+                }
+            }
+            return;
         }
     }
 
@@ -467,4 +498,61 @@ public class SwipeListView extends ListView {
         }
     }
 
+    @Deprecated
+    @Override
+    public void setOnScrollListener(OnScrollListener onScrollListener) {
+        super.setOnScrollListener(onScrollListener);
+    }
+
+    public void setCustomOnScrollListener(OnScrollListener onScrollListener) {
+        mOnScrollListener = onScrollListener;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mDataSetObserver != null) {
+            getAdapter().unregisterDataSetObserver(mDataSetObserver);
+        }
+    }
+
+    public void startShakeAnimators() {
+        int childCount = getChildCount();
+        int headerCount = getHeaderViewsCount();
+        if (childCount == headerCount) {
+            return;
+        }
+        mShakeAnimations.clear();
+        for (int i = headerCount; i < childCount; i++) {
+            int firstVisiblePosition = getFirstVisiblePosition();
+            View childView = getChildAt(i + firstVisiblePosition);
+            if(null == childView){
+                continue;
+            }
+            AnimatorSet mNotificationListShakeAnimator = new AnimatorSet();
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(childView, "translationX", getRandomXValues());
+            objectAnimator1.setRepeatCount(-1);
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(childView, "translationY", getRandomYValues());
+            objectAnimator2.setRepeatCount(-1);
+            mNotificationListShakeAnimator.playTogether(objectAnimator1,objectAnimator2);
+            mNotificationListShakeAnimator.setDuration(500);
+            mNotificationListShakeAnimator.setStartDelay(i * 50);
+            mNotificationListShakeAnimator.start();
+            mShakeAnimations.add(mNotificationListShakeAnimator);
+        }
+    }
+
+    public void clearShakeAnimations(){
+        for (android.animation.AnimatorSet animatorSet : mShakeAnimations){
+            animatorSet.cancel();
+        }
+    }
+
+    private float[] getRandomXValues() {
+        return new float[]{0, 8, -8, 4, -3, 4};
+    }
+
+    private float[] getRandomYValues() {
+        return new float[]{0, 8, 4, -6, 5, -4};
+    }
 }
