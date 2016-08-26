@@ -2,12 +2,12 @@ package com.cleanmaster.notificationclean.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.cleanmaster.notificationclean.view.adapter.AbsAdapter;
@@ -56,20 +56,31 @@ public class Main3Activity extends FragmentActivity {
                 }
             }
         });
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        mSwipeListView.setCustomOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void run() {
-                mSwipeListView.startShakeAnimators();
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeListView.clearShakeAnimations();
-                        mSwipeListView.performSwipeItem();
-                    }
-                }, 3000);
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                Log.e("", "OnScrollListener onScrollStateChanged");
             }
-        }, 2000);
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                Log.e("", "OnScrollListener onScroll");
+            }
+        });
+
+//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mSwipeListView.startShakeAnimators();
+//                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mSwipeListView.clearShakeAnimations();
+//                        mSwipeListView.performSwipeItem();
+//                    }
+//                }, 3000);
+//            }
+//        }, 2000);
     }
 
     private static class NotificationCleanerAdapter extends AbsAdapter {
@@ -142,7 +153,7 @@ public class Main3Activity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (mSwipeListView != null) {
-            mSwipeListView.clearShakeAnimations();
+            mSwipeListView.clearSwipeAnimations();
         }
     }
 }

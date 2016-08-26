@@ -26,7 +26,6 @@ import android.database.DataSetObserver;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -509,10 +508,21 @@ public class SwipeListView extends ListView {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (touchListener != null) {
+            touchListener.onAttachedToWindow(true);
+        }
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mDataSetObserver != null) {
             getAdapter().unregisterDataSetObserver(mDataSetObserver);
+        }
+        if (touchListener != null) {
+            touchListener.onAttachedToWindow(false);
         }
     }
 
@@ -543,8 +553,21 @@ public class SwipeListView extends ListView {
     }
 
     public void clearShakeAnimations(){
-        for (android.animation.AnimatorSet animatorSet : mShakeAnimations){
+        for (android.animation.AnimatorSet animatorSet : mShakeAnimations) {
+            if (null == animatorSet) {
+                continue;
+            }
             animatorSet.cancel();
+        }
+    }
+
+    public void clearSwipeAnimations(){
+        clearShakeAnimations();
+        if (touchListener!=null) {
+            touchListener.clearSwipeAnimations();
+        }
+        if (touchListener != null) {
+            touchListener.onAttachedToWindow(false);
         }
     }
 

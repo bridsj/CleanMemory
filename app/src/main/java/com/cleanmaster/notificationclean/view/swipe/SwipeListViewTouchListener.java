@@ -22,6 +22,7 @@ package com.cleanmaster.notificationclean.view.swipe;
 
 import android.graphics.Rect;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.widget.ListView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,6 +92,10 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
     private List<Boolean> opened = new ArrayList<Boolean>();
     private List<Boolean> openedRight = new ArrayList<Boolean>();
     private boolean listViewMoving;
+    private List<ViewPropertyAnimator> mTranslationAnimations = new ArrayList<>();
+    private List<ValueAnimator> mLayoutChangeAnimations = new ArrayList<>();
+    private boolean mOnAttached;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     /**
      * Constructor
@@ -107,6 +113,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         configShortAnimationTime = swipeListView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
         animationTime = configShortAnimationTime;
         this.swipeListView = swipeListView;
+        mOnAttached = true;
     }
 
     /**
@@ -322,6 +329,14 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         }
     }
 
+    /**
+     * run the swipe animator automatic
+     * @param view
+     * @param isManual
+     * @param swap
+     * @param swapRight
+     * @param position
+     */
     public void performSwipeItem(final View view, final boolean isManual, final boolean swap, final boolean swapRight, final int position) {
         swipeCurrentAction = SwipeListView.SWIPE_ACTION_DISMISS;
         if (viewWidth < 2) {
@@ -333,6 +348,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
     /**
      * Create dismiss animation
      * @param view affected view
+     * @param isManual
      * @param swap If will change state. If is "false" returns to the original position
      * @param swapRight If swap is true, this parameter tells if move is to the right or left
      * @param position Position of list
@@ -357,7 +373,8 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
             ++dismissAnimationRefCount;
             alpha = 0;
         }
-        animate(view)
+        ViewPropertyAnimator viewPropertyAnimator = animate(view);
+                viewPropertyAnimator
                 .translationX(moveTo)
                 .alpha(alpha)
                 .setDuration(animationTime)
@@ -369,6 +386,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                         }
                     }
                 });
+        mTranslationAnimations.add(viewPropertyAnimator);
 
     }
 
@@ -390,9 +408,8 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                 moveTo = swapRight ? (int) (viewWidth - rightOffset) : (int) (-viewWidth + leftOffset);
             }
         }
-
-        animate(view)
-                .translationX(moveTo)
+        ViewPropertyAnimator viewPropertyAnimator = animate(view);
+        viewPropertyAnimator.translationX(moveTo)
                 .setDuration(animationTime)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -410,6 +427,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                         }
                     }
                 });
+        mTranslationAnimations.add(viewPropertyAnimator);
     }
 
     /**
@@ -442,8 +460,11 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                 if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_FLING && scrollState != SCROLL_STATE_TOUCH_SCROLL) {
                     listViewMoving = false;
                     swipeListView.resetScrolling();
-                    new Handler().postDelayed(new Runnable() {
+                    mHandler.postDelayed(new Runnable() {
                         public void run() {
+                            if (!isOnAttached()) {
+                                return;
+                            }
                             setEnabled(true);
                         }
                     }, 500);
@@ -723,7 +744,38 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         });
 
         pendingDismisses.add(new PendingDismissData(dismissPosition, dismissView));
+        mLayoutChangeAnimations.add(animator);
         animator.start();
     }
 
+    public boolean isOnAttached() {
+        return mOnAttached;
+    }
+
+    public void onAttachedToWindow(boolean onAttached) {
+        mOnAttached = onAttached;
+    }
+
+    public void clearSwipeAnimations(){
+        clearTranslationAnimations();
+        clearLayoutChangeAnimations();
+    }
+
+    private void clearTranslationAnimations() {
+        for (ViewPropertyAnimator animator : mTranslationAnimations) {
+            if (null == animator) {
+                continue;
+            }
+            animator.cancel();
+        }
+    }
+
+    private void clearLayoutChangeAnimations() {
+        for (ValueAnimator animator : mLayoutChangeAnimations) {
+            if (null == animator) {
+                continue;
+            }
+            animator.cancel();
+        }
+    }
 }
