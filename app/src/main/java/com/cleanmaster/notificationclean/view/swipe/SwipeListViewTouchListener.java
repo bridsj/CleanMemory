@@ -108,8 +108,8 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         this.swipeBackView = swipeBackView;
         ViewConfiguration vc = ViewConfiguration.get(swipeListView.getContext());
         slop = vc.getScaledTouchSlop();
-        minFlingVelocity = vc.getScaledMinimumFlingVelocity();
-        maxFlingVelocity = vc.getScaledMaximumFlingVelocity();
+        minFlingVelocity = vc.getScaledMinimumFlingVelocity() * 24; //目前定义min 1200
+        maxFlingVelocity = vc.getScaledMaximumFlingVelocity();//目前定义max 8000
         configShortAnimationTime = swipeListView.getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
         animationTime = configShortAnimationTime;
         this.swipeListView = swipeListView;
@@ -509,6 +509,9 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
      */
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (swipeListView.onInterceptCalculateTouchEvent(motionEvent,"ItemTouch")) {
+            return false;
+        }
         if (viewWidth < 2) {
             viewWidth = swipeListView.getWidth();
         }

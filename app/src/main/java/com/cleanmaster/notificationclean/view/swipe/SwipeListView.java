@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * ListView subclass that provides the swipe functionality
  */
-public class SwipeListView extends ListView {
+public class SwipeListView extends AbsSwipeListView {
 
     /**
      * Disables all swipes
@@ -196,6 +196,7 @@ public class SwipeListView extends ListView {
     }
 
     private DataSetObserver mDataSetObserver;
+
     /**
      * @see ListView#setAdapter(ListAdapter)
      */
@@ -234,6 +235,7 @@ public class SwipeListView extends ListView {
 
     /**
      * Notifies onDismiss
+     *
      * @param isManual
      * @param reverseSortedPositions All dismissed positions
      */
@@ -319,7 +321,7 @@ public class SwipeListView extends ListView {
         for (int i = headerCount; i < childCount; i++) {
             int firstVisiblePosition = getFirstVisiblePosition();
             View childView = getChildAt(i + firstVisiblePosition);
-            if(null != childView){
+            if (null != childView) {
                 if (touchListener != null) {
                     touchListener.performSwipeItem(childView, false, true, true, i);
                 }
@@ -439,6 +441,10 @@ public class SwipeListView extends ListView {
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        boolean onInterceptTouchEvent = super.onInterceptCalculateTouchEvent(ev, "ListView");
+        if (onInterceptTouchEvent) {
+            return super.onInterceptTouchEvent(ev);
+        }
         int action = MotionEventCompat.getActionMasked(ev);
         final float x = ev.getX();
         final float y = ev.getY();
@@ -446,7 +452,6 @@ public class SwipeListView extends ListView {
         if (touchState == TOUCH_STATE_SCROLLING_X) {
             return touchListener.onTouch(this, ev);
         }
-
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 checkInMoving(x, y);
@@ -539,7 +544,7 @@ public class SwipeListView extends ListView {
         for (int i = headerCount; i < childCount; i++) {
             int firstVisiblePosition = getFirstVisiblePosition();
             View childView = getChildAt(i + firstVisiblePosition);
-            if(null == childView){
+            if (null == childView) {
                 continue;
             }
             AnimatorSet mNotificationListShakeAnimator = new AnimatorSet();
@@ -547,7 +552,7 @@ public class SwipeListView extends ListView {
             objectAnimator1.setRepeatCount(-1);
             ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(childView, "translationY", getRandomYValues());
             objectAnimator2.setRepeatCount(-1);
-            mNotificationListShakeAnimator.playTogether(objectAnimator1,objectAnimator2);
+            mNotificationListShakeAnimator.playTogether(objectAnimator1, objectAnimator2);
             mNotificationListShakeAnimator.setDuration(500);
             mNotificationListShakeAnimator.setStartDelay(i * 50);
             mNotificationListShakeAnimator.start();
@@ -555,7 +560,7 @@ public class SwipeListView extends ListView {
         }
     }
 
-    public void clearShakeAnimations(){
+    public void clearShakeAnimations() {
         for (android.animation.AnimatorSet animatorSet : mShakeAnimations) {
             if (null == animatorSet) {
                 continue;
@@ -564,9 +569,9 @@ public class SwipeListView extends ListView {
         }
     }
 
-    public void clearSwipeAnimations(){
+    public void clearSwipeAnimations() {
         clearShakeAnimations();
-        if (touchListener!=null) {
+        if (touchListener != null) {
             touchListener.clearSwipeAnimations();
         }
         if (touchListener != null) {
