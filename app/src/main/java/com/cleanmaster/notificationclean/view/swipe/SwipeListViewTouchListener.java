@@ -438,16 +438,22 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         paused = !enabled;
     }
 
+    private AbsListView.OnScrollListener mOnScrollListener;
+
+    public void setOnScrollListener(AbsListView.OnScrollListener onScrollListener) {
+        mOnScrollListener = onScrollListener;
+    }
+
     /**
      * Return ScrollListener for ListView
      * @return OnScrollListener
      */
-    public AbsListView.OnScrollListener makeScrollListener(final AbsListView.OnScrollListener onScrollListener) {
+    public AbsListView.OnScrollListener makeScrollListener() {
         return new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                if (onScrollListener != null) {
-                    onScrollListener.onScrollStateChanged(absListView, scrollState);
+                if (mOnScrollListener != null) {
+                    mOnScrollListener.onScrollStateChanged(absListView, scrollState);
                 }
                 setEnabled(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
                 if (swipeClosesAllItemsWhenListMoves && scrollState == SCROLL_STATE_TOUCH_SCROLL) {
@@ -474,12 +480,13 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
 
             @Override
             public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-                if (onScrollListener != null) {
-                    onScrollListener.onScroll(absListView, i, i1, i2);
+                if (mOnScrollListener != null) {
+                    mOnScrollListener.onScroll(absListView, i, i1, i2);
                 }
             }
         };
     }
+
 
     /**
      * Close all opened items

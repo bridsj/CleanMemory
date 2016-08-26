@@ -192,7 +192,7 @@ public class SwipeListView extends ListView {
         touchListener.setSwipeClosesAllItemsWhenListMoves(swipeCloseAllItemsWhenMoveList);
         touchListener.setSwipeOpenOnLongPress(swipeOpenOnLongPress);
         setOnTouchListener(touchListener);
-        setOnScrollListener(touchListener.makeScrollListener(mOnScrollListener));
+        setOnScrollListener(touchListener.makeScrollListener());
     }
 
     private DataSetObserver mDataSetObserver;
@@ -505,6 +505,9 @@ public class SwipeListView extends ListView {
 
     public void setCustomOnScrollListener(OnScrollListener onScrollListener) {
         mOnScrollListener = onScrollListener;
+        if (touchListener != null) {
+            touchListener.setOnScrollListener(onScrollListener);
+        }
     }
 
     @Override
