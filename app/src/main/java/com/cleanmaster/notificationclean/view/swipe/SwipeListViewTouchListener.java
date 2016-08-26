@@ -322,10 +322,14 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
      */
     private void generateAnimate(final View view, final boolean isManual, final boolean swap, final boolean swapRight, final int position) {
         if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_REVEAL) {
-            generateRevealAnimate(view, swap, swapRight, position);
-        }
-        if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_DISMISS) {
             generateDismissAnimate(parentView, isManual, swap, swapRight, position);
+        } else if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_DISMISS) {
+            generateDismissAnimate(parentView, isManual, swap, swapRight, position);
+        } else {
+            if (parentView != null) {
+                parentView.setTranslationX(0);
+                parentView.setAlpha(1.0f);
+            }
         }
     }
 
@@ -462,6 +466,9 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                 if (scrollState==SCROLL_STATE_TOUCH_SCROLL) {
                     listViewMoving = true;
                     setEnabled(false);
+                }
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    swipeListView.resetItemsAnimation();
                 }
                 if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_FLING && scrollState != SCROLL_STATE_TOUCH_SCROLL) {
                     listViewMoving = false;

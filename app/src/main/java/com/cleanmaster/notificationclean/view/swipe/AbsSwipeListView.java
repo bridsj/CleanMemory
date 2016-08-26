@@ -77,6 +77,6 @@ public class AbsSwipeListView extends ListView {
 
     private boolean isActionMoveVertical(float xDiff, float yDiff) {
 
-        return Math.atan2(yDiff, xDiff) > 3 * Math.PI / 8; //
+        return Math.atan2(yDiff, xDiff) > (Math.PI / 8); // 1/4π
     }
 }

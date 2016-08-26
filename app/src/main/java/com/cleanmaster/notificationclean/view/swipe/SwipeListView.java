@@ -26,6 +26,7 @@ import android.database.DataSetObserver;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -117,6 +118,8 @@ public class SwipeListView extends AbsSwipeListView {
 
     private List<AnimatorSet> mShakeAnimations = new ArrayList<>();
 
+    private int mSwipeFrontView;
+
     /**
      * @see ListView#ListView(Context)
      */
@@ -180,6 +183,7 @@ public class SwipeListView extends AbsSwipeListView {
 
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
         touchSlop = ViewConfigurationCompat.getScaledPagingTouchSlop(configuration);
+        mSwipeFrontView = swipeFrontView;
         touchListener = new SwipeListViewTouchListener(this, swipeFrontView, swipeBackView);
         if (swipeAnimationTime > 0) {
             touchListener.setAnimationTime(swipeAnimationTime);
@@ -441,10 +445,11 @@ public class SwipeListView extends AbsSwipeListView {
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean onInterceptTouchEvent = super.onInterceptCalculateTouchEvent(ev, "ListView");
-        if (onInterceptTouchEvent) {
-            return super.onInterceptTouchEvent(ev);
-        }
+//        boolean onInterceptTouchEvent = super.onInterceptCalculateTouchEvent(ev, "ListView");
+//        if (onInterceptTouchEvent) {
+//            return super.onInterceptTouchEvent(ev);
+//        }
+        boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
         int action = MotionEventCompat.getActionMasked(ev);
         final float x = ev.getX();
         final float y = ev.getY();
@@ -472,7 +477,7 @@ public class SwipeListView extends AbsSwipeListView {
                 break;
         }
 
-        return super.onInterceptTouchEvent(ev);
+        return onInterceptTouchEvent;
     }
 
     /**
@@ -535,15 +540,11 @@ public class SwipeListView extends AbsSwipeListView {
     }
 
     public void startShakeAnimators() {
-        int childCount = getChildCount();
-        int headerCount = getHeaderViewsCount();
-        if (childCount == headerCount) {
-            return;
-        }
+        int start = getFirstVisiblePosition();
+        int end = getLastVisiblePosition();
         mShakeAnimations.clear();
-        for (int i = headerCount; i < childCount; i++) {
-            int firstVisiblePosition = getFirstVisiblePosition();
-            View childView = getChildAt(i + firstVisiblePosition);
+        for (int i = start; i <= end; i++) {
+            View childView = getChildAt(i - start);
             if (null == childView) {
                 continue;
             }
@@ -557,6 +558,25 @@ public class SwipeListView extends AbsSwipeListView {
             mNotificationListShakeAnimator.setStartDelay(i * 50);
             mNotificationListShakeAnimator.start();
             mShakeAnimations.add(mNotificationListShakeAnimator);
+        }
+    }
+
+    public void resetItemsAnimation(){
+        int start = getFirstVisiblePosition();
+        int end = getLastVisiblePosition();
+        for (int i = start; i <= end; i++) {
+            View childView = getChildAt(i - start);
+            if (null == childView) {
+                continue;
+            }
+            childView.setTranslationX(0.0f);
+            childView.setAlpha(1.0f);
+            View frontView = childView.findViewById(mSwipeFrontView);
+            if (null == frontView) {
+                continue;
+            }
+            frontView.setTranslationX(0.0f);
+            frontView.setAlpha(1.0f);
         }
     }
 

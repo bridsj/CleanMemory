@@ -2,6 +2,8 @@ package com.cleanmaster.notificationclean.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -68,19 +70,19 @@ public class Main3Activity extends FragmentActivity {
             }
         });
 
-//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
 //                mSwipeListView.startShakeAnimators();
-//                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mSwipeListView.clearShakeAnimations();
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeListView.clearShakeAnimations();
 //                        mSwipeListView.performSwipeItem();
-//                    }
-//                }, 3000);
-//            }
-//        }, 2000);
+                    }
+                }, 3000);
+            }
+        }, 2000);
     }
 
     private static class NotificationCleanerAdapter extends AbsAdapter {
