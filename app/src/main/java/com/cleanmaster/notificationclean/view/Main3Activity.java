@@ -73,12 +73,12 @@ public class Main3Activity extends FragmentActivity {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-//                mSwipeListView.startShakeAnimators();
+                mSwipeListView.startShakeAnimators();
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mSwipeListView.clearShakeAnimations();
-//                        mSwipeListView.performSwipeItem();
+                        mSwipeListView.performSwipeItem();
                     }
                 }, 3000);
             }
