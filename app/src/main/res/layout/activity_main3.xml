@@ -3,6 +3,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:swipe="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,8 +11,8 @@
 
 
     <com.cleanmaster.notificationclean.view.swipe.SwipeListView
-        xmlns:swipe="http://schemas.android.com/apk/res-auto"
         android:id="@+id/example_lv_list"
+        xmlns:swipe="http://schemas.android.com/apk/res-auto"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:listSelector="#00000000"
@@ -25,5 +26,21 @@
         swipe:swipeOffsetLeft="10dp"
         swipe:swipeOffsetRight="10dp"
         swipe:swipeOpenOnLongPress="true"/>
+
+    <com.cleanmaster.notificationclean.view.mountain.PorterShapeImageView
+        android:id="@+id/po_image1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:src="#FF0000"
+        app:siShape="@drawable/icon_copylink"/>
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_green_normal"/>
 
 </RelativeLayout>

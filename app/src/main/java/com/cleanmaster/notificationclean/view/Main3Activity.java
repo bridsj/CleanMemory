@@ -1,6 +1,9 @@
 package com.cleanmaster.notificationclean.view;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cleanmaster.notificationclean.view.adapter.AbsAdapter;
@@ -27,6 +31,7 @@ import java.util.List;
 public class Main3Activity extends FragmentActivity {
     private SwipeListView mSwipeListView;
     private NotificationCleanerAdapter mAdapter;
+    private ImageView mImageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +88,10 @@ public class Main3Activity extends FragmentActivity {
                 }, 3000);
             }
         }, 2000);
+
+        mImageView = (ImageView) findViewById(R.id.image);
+        Drawable drawable = mImageView.getBackground();
+        drawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
     }
 
     private static class NotificationCleanerAdapter extends AbsAdapter {
