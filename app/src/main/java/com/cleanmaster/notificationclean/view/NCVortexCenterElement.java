@@ -80,9 +80,10 @@ public class NCVortexCenterElement extends NCRendererElement {
     private int mPercent = -1;
 
     private void initTexture() {
-        mTextures = new int[2];
+        mTextures = new int[3];
 
-        mTextures[1] = NCTextureUtils.loadTexture(getContext(), mergeBitmaps(getContext(), R.drawable.notification_management_clean_icon_fan));
+        mTextures[1] = NCTextureUtils.loadTexture(getContext(), mergeBitmaps(getContext(), R.drawable.notification_management_clean_icon_line));
+        mTextures[2] = NCTextureUtils.loadTexture(getContext(), mergeBitmaps(getContext(), R.drawable.notification_management_clean_icon));
 
         reloadTextures();
     }
@@ -128,7 +129,7 @@ public class NCVortexCenterElement extends NCRendererElement {
 
         if (percent != mPercent) {
 
-            BitmapFactory.Options options = getBitmapFactoryOptions(getContext(), R.drawable.notification_management_clean_icon_fan);
+            BitmapFactory.Options options = getBitmapFactoryOptions(getContext(), R.drawable.notification_management_clean_icon_line);
             final int bitmapWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, options.outWidth, getContext().getResources().getDisplayMetrics());
             final int bitmapHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, options.outHeight, getContext().getResources().getDisplayMetrics());
             Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
@@ -195,7 +196,7 @@ public class NCVortexCenterElement extends NCRendererElement {
             mScale = 1.12f;
         }
         GLES20.glEnable(GLES20.GL_BLEND);
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE);
+
 
         Matrix.setIdentityM(scale, 0);
         Matrix.scaleM(scratch, 0, mScale, mScale, 0);
@@ -216,6 +217,13 @@ public class NCVortexCenterElement extends NCRendererElement {
         GLES20.glEnableVertexAttribArray(textureHandle);
         GLES20.glVertexAttribPointer(textureHandle, 2, GLES20.GL_FLOAT, false, 0, mTextureCoordinates);
 
+
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[1]);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, VERTEX_COUNT);
+
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE);
+
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[0]);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, VERTEX_COUNT);
@@ -227,7 +235,7 @@ public class NCVortexCenterElement extends NCRendererElement {
         Matrix.multiplyMM(matrix, 0, scratch, 0, matrix, 0);
         GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, matrix, 0);
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[1]);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[2]);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, VERTEX_COUNT);
         GLES20.glDisableVertexAttribArray(positionHandle);
         GLES20.glDisableVertexAttribArray(textureHandle);

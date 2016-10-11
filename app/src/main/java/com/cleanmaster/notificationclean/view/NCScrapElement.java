@@ -50,7 +50,7 @@ public class NCScrapElement extends NCRendererElement {
             "}";
 
     private static final int[] RESOURCE_IDS = new int[]{
-            R.drawable.notification_management_clean_polygon,
+            R.drawable.pic_piece,
     };
 
     private static final int REGION_COUNT = 4;

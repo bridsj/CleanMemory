@@ -93,7 +93,7 @@ public class NotificationCleanerRenderer implements GLSurfaceView.Renderer {
         GLES20.glDisable(GLES20.GL_CULL_FACE);
 
 //        GLES20.glClearColor(0.f, 0.f, 0.f, 0.6f);
-
+        GLES20.glClearColor(0f, 0f, 0f, 0f);
         loadElement();
 
 //        prepareIcon();
@@ -148,7 +148,6 @@ public class NotificationCleanerRenderer implements GLSurfaceView.Renderer {
                 return;
             case STARTED:
                 if (mMatteAlpha <= MAX_MATTE_ALPHA) {
-                    GLES20.glClearColor(0.f, 0.f, 0.f, mMatteAlpha);
                     mMatteAlpha += MATTE_SWING;
                 }
                 if (duration > mDuration) {
@@ -158,7 +157,6 @@ public class NotificationCleanerRenderer implements GLSurfaceView.Renderer {
                 break;
             case STOPPING:
                 if (mMatteAlpha >= 0.f) {
-                    GLES20.glClearColor(0.f, 0.f, 0.f, mMatteAlpha);
                     mMatteAlpha -= MATTE_SWING;
                 }
                 if (duration > mFinishDuration) {

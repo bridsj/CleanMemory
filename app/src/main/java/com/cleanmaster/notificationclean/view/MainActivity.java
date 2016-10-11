@@ -43,11 +43,11 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onStopped() {
-                        findViewById(R.id.notification_clean_layout_main_empty).setVisibility(View.VISIBLE);
+//                        findViewById(R.id.notification_clean_layout_main_empty).setVisibility(View.VISIBLE);
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mCMCircularPbAnimatorView.startAnimator();
+//                                mCMCircularPbAnimatorView.startAnimator();
 
 
                             }

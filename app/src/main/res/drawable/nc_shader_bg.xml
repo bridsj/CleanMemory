@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- android:shape指定形状类型，默认为rectangle -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="oval">
+    <!--&lt;!&ndash; size设置形状的大小 &ndash;&gt;-->
+    <!--<size-->
+        <!--android:width="360dp"-->
+        <!--android:height="360dp"/>-->
+    <!-- gradient设置渐变 -->
+    <gradient
+        android:endColor="#00FFFFFF"
+        android:centerColor="#CDFFFFFF"
+        android:gradientRadius="150dp"
+        android:startColor="#FFFFFF"
+        android:type="radial"/>
+</shape>
