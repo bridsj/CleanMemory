@@ -196,8 +196,7 @@ public class NCVortexCenterElement extends NCRendererElement {
             mScale = 1.12f;
         }
         GLES20.glEnable(GLES20.GL_BLEND);
-
-
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE);
         Matrix.setIdentityM(scale, 0);
         Matrix.scaleM(scratch, 0, mScale, mScale, 0);
         Matrix.multiplyMM(scratch, 0, scratch, 0, scale, 0);
@@ -217,12 +216,10 @@ public class NCVortexCenterElement extends NCRendererElement {
         GLES20.glEnableVertexAttribArray(textureHandle);
         GLES20.glVertexAttribPointer(textureHandle, 2, GLES20.GL_FLOAT, false, 0, mTextureCoordinates);
 
-
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[1]);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, VERTEX_COUNT);
 
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE);
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[0]);
@@ -237,6 +234,7 @@ public class NCVortexCenterElement extends NCRendererElement {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[2]);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, VERTEX_COUNT);
+
         GLES20.glDisableVertexAttribArray(positionHandle);
         GLES20.glDisableVertexAttribArray(textureHandle);
         GLES20.glDisable(GLES20.GL_BLEND);

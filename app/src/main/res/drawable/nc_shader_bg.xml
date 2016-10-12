@@ -9,8 +9,7 @@
     <!-- gradient设置渐变 -->
     <gradient
         android:endColor="#00FFFFFF"
-        android:centerColor="#CDFFFFFF"
         android:gradientRadius="150dp"
-        android:startColor="#FFFFFF"
+        android:startColor="#cdFFFFFF"
         android:type="radial"/>
 </shape>
